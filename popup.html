@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reddit AI Comment Helper</title>
+  <link rel="stylesheet" type="text/css" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Reddit AI Comment Helper</h1>
+      <a href="options.html" target="_blank" class="settings-link" title="Settings">⚙️</a>
+    </div>
+
+    <button id="generate-btn">Generate Comment</button>
+
+    <div id="loading-spinner" class="spinner" style="display: none;"></div>
+
+    <div id="result-container" style="display: none;">
+      <textarea id="comment-result" readonly rows="8"></textarea>
+      <button id="copy-btn">Copy to Clipboard</button>
+      <p id="copy-status" class="status"></p>
+    </div>
+
+    <div id="error-message" class="error"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

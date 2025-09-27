@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reddit AI Comment Helper Settings</title>
+  <link rel="stylesheet" type="text/css" href="popup.css">
+</head>
+<body>
+  <h1>Settings</h1>
+  <p>To use this extension, you need a Google Gemini API key.</p>
+  <p>
+    You can get a free key from the <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a>.
+  </p>
+
+  <hr>
+
+  <h2>Your API Key</h2>
+  <form id="options-form">
+    <input type="password" id="api-key" size="50">
+    <button type="submit">Save</button>
+  </form>
+  <p id="status" class="status"></p>
+
+  <hr>
+
+  <h2>Security & Privacy Notice</h2>
+  <div class="privacy-notice">
+    <p>
+      Your API key is stored securely in your browser's local storage using `chrome.storage.local`. It is never shared with any third-party servers except for Google's own Generative AI API for the purpose of generating comments.
+    </p>
+    <p>
+      When you generate a comment, the title and body of the current Reddit post are sent to the Google Gemini API. No other data from your browser is collected or transmitted.
+    </p>
+    <p class="warning">
+      <strong>Warning:</strong> Treat your API key like a password. Do not share it publicly. If you believe your key has been compromised, you should revoke it immediately from your Google AI Studio dashboard and generate a new one.
+    </p>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
