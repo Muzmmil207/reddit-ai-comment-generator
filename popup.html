@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reddit AI Comment Helper</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>🤖 Reddit AI Helper</h1>
+        <p class="subtitle">Generate thoughtful comments with Google Gemini</p>
+      </header>
+
+      <div class="status-bar" id="statusBar">
+        <span id="statusText">Ready to generate comment</span>
+      </div>
+
+      <div class="actions">
+        <button id="generateBtn" class="btn btn-primary">
+          <span class="btn-text">Generate Comment</span>
+          <span class="btn-spinner" style="display: none">⏳</span>
+        </button>
+
+        <button id="copyBtn" class="btn btn-secondary" disabled>
+          <span class="btn-text">📋 Copy</span>
+          <span class="btn-success" style="display: none">✅</span>
+        </button>
+      </div>
+
+      <div class="result-container">
+        <label for="commentOutput" class="result-label"
+          >Generated Comment:</label
+        >
+        <textarea
+          id="commentOutput"
+          class="result-textarea"
+          readonly
+          placeholder="Your AI-generated comment will appear here..."
+          rows="6"
+        ></textarea>
+      </div>
+
+      <div class="footer">
+        <a href="options.html" class="settings-link" target="_blank">
+          ⚙️ Settings & API Key
+        </a>
+        <div class="privacy-note">
+          <small
+            >This extension sends post content to Google Gemini API to generate
+            comments. Never auto-posts to Reddit.</small
+          >
+        </div>
+      </div>
+
+      <!-- Error modal -->
+      <div id="errorModal" class="modal" style="display: none">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>⚠️ Error</h3>
+            <button id="closeError" class="close-btn">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p id="errorMessage"></p>
+          </div>
+          <div class="modal-footer">
+            <button id="errorOk" class="btn btn-primary">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

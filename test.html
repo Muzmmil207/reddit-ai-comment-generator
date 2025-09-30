@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reddit AI Comment Helper - Test Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      .test-section {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+      .test-section h3 {
+        color: #495057;
+        margin-top: 0;
+      }
+      .test-link {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin: 5px;
+        transition: background 0.2s ease;
+      }
+      .test-link:hover {
+        background: #5a67d8;
+      }
+      .instructions {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 20px 0;
+      }
+      .instructions h4 {
+        color: #856404;
+        margin-top: 0;
+      }
+      .instructions ol {
+        color: #856404;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🧪 Reddit AI Comment Helper - Test Page</h1>
+
+    <div class="instructions">
+      <h4>📋 Testing Instructions</h4>
+      <ol>
+        <li>
+          Make sure the extension is installed and configured with your API key
+        </li>
+        <li>
+          Click on any of the test links below to navigate to sample Reddit
+          posts
+        </li>
+        <li>Click the extension icon in your browser toolbar</li>
+        <li>Click "Generate Comment" and verify it works</li>
+        <li>Test different post types (text, link, image, video)</li>
+        <li>Verify error handling with invalid posts</li>
+      </ol>
+    </div>
+
+    <div class="test-section">
+      <h3>📝 Text Posts (r/AskReddit)</h3>
+      <p>
+        These posts contain title and body text that should be extracted
+        properly.
+      </p>
+      <a
+        href="https://www.reddit.com/r/AskReddit/"
+        class="test-link"
+        target="_blank"
+        >Browse AskReddit</a
+      >
+      <a
+        href="https://www.reddit.com/r/AskReddit/comments/1a2b3c4d/sample_question/"
+        class="test-link"
+        target="_blank"
+        >Sample Text Post</a
+      >
+    </div>
+
+    <div class="test-section">
+      <h3>🔗 Link Posts (r/technology, r/science)</h3>
+      <p>
+        These posts link to external articles and should extract title and link
+        information.
+      </p>
+      <a
+        href="https://www.reddit.com/r/technology/"
+        class="test-link"
+        target="_blank"
+        >Browse Technology</a
+      >
+      <a
+        href="https://www.reddit.com/r/science/"
+        class="test-link"
+        target="_blank"
+        >Browse Science</a
+      >
+    </div>
+
+    <div class="test-section">
+      <h3>🖼️ Image Posts (r/pics, r/funny)</h3>
+      <p>
+        These posts contain images and should extract title with image context.
+      </p>
+      <a href="https://www.reddit.com/r/pics/" class="test-link" target="_blank"
+        >Browse Pics</a
+      >
+      <a
+        href="https://www.reddit.com/r/funny/"
+        class="test-link"
+        target="_blank"
+        >Browse Funny</a
+      >
+    </div>
+
+    <div class="test-section">
+      <h3>🎥 Video Posts (r/videos, r/gifs)</h3>
+      <p>
+        These posts contain videos and should extract title with video context.
+      </p>
+      <a
+        href="https://www.reddit.com/r/videos/"
+        class="test-link"
+        target="_blank"
+        >Browse Videos</a
+      >
+      <a href="https://www.reddit.com/r/gifs/" class="test-link" target="_blank"
+        >Browse GIFs</a
+      >
+    </div>
+
+    <div class="test-section">
+      <h3>🧪 Edge Cases</h3>
+      <p>Test edge cases and error handling.</p>
+      <a href="https://www.reddit.com/" class="test-link" target="_blank"
+        >Reddit Homepage (should show error)</a
+      >
+      <a
+        href="https://www.reddit.com/r/nonexistentsubreddit/"
+        class="test-link"
+        target="_blank"
+        >Non-existent Subreddit</a
+      >
+    </div>
+
+    <div class="test-section">
+      <h3>✅ Expected Test Results</h3>
+      <ul>
+        <li>
+          <strong>✅ Success Cases:</strong>
+          <ul>
+            <li>Post title and content extracted successfully</li>
+            <li>AI comment generated (30-120 words)</li>
+            <li>Comment is relevant and contextual</li>
+            <li>Copy button works</li>
+            <li>Loading states display properly</li>
+          </ul>
+        </li>
+        <li>
+          <strong>❌ Error Cases:</strong>
+          <ul>
+            <li>
+              Not on Reddit post page → "Please navigate to a Reddit post first"
+            </li>
+            <li>No API key configured → "Please configure your API key"</li>
+            <li>
+              Network error → "Network error. Please check your connection"
+            </li>
+            <li>API error → Specific error message from Gemini API</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="test-section">
+      <h3>🔧 Debug Information</h3>
+      <p>If you encounter issues:</p>
+      <ol>
+        <li>Open Chrome DevTools (F12)</li>
+        <li>Go to Console tab</li>
+        <li>Look for error messages</li>
+        <li>Check Network tab for failed API requests</li>
+        <li>Verify API key is configured in extension settings</li>
+      </ol>
+    </div>
+
+    <div class="test-section">
+      <h3>📊 Test Checklist</h3>
+      <p>Mark off each item as you test:</p>
+      <ul>
+        <li>☐ Extension loads without errors</li>
+        <li>☐ API key can be saved in settings</li>
+        <li>☐ API key test passes</li>
+        <li>☐ Text post content extraction works</li>
+        <li>☐ Link post content extraction works</li>
+        <li>☐ Image post content extraction works</li>
+        <li>☐ Video post content extraction works</li>
+        <li>☐ Comment generation works</li>
+        <li>☐ Copy to clipboard works</li>
+        <li>☐ Error handling works for invalid pages</li>
+        <li>☐ Error handling works for network issues</li>
+        <li>☐ Loading states display properly</li>
+      </ul>
+    </div>
+  </body>
+</html>

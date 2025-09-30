@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Icon Generator for Reddit AI Comment Helper</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .icon-container {
+        display: inline-block;
+        margin: 10px;
+        text-align: center;
+      }
+      canvas {
+        border: 1px solid #ccc;
+        margin: 5px;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Reddit AI Comment Helper - Icon Generator</h1>
+    <p>
+      This HTML file generates placeholder icons for the Chrome extension.
+      Right-click and save the generated icons.
+    </p>
+
+    <div class="icon-container">
+      <h3>16x16 Icon</h3>
+      <canvas id="icon16" width="16" height="16"></canvas>
+      <br />
+      <button onclick="downloadIcon('icon16', 'icon16.png')">
+        Download 16x16
+      </button>
+    </div>
+
+    <div class="icon-container">
+      <h3>48x48 Icon</h3>
+      <canvas id="icon48" width="48" height="48"></canvas>
+      <br />
+      <button onclick="downloadIcon('icon48', 'icon48.png')">
+        Download 48x48
+      </button>
+    </div>
+
+    <div class="icon-container">
+      <h3>128x128 Icon</h3>
+      <canvas id="icon128" width="128" height="128"></canvas>
+      <br />
+      <button onclick="downloadIcon('icon128', 'icon128.png')">
+        Download 128x128
+      </button>
+    </div>
+
+    <script>
+      function drawIcon(canvas, size) {
+        const ctx = canvas.getContext("2d");
+        const centerX = size / 2;
+        const centerY = size / 2;
+        const radius = size * 0.35;
+
+        // Clear canvas
+        ctx.clearRect(0, 0, size, size);
+
+        // Background gradient
+        const gradient = ctx.createRadialGradient(
+          centerX,
+          centerY,
+          0,
+          centerX,
+          centerY,
+          radius
+        );
+        gradient.addColorStop(0, "#667eea");
+        gradient.addColorStop(1, "#764ba2");
+
+        // Draw background circle
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.fill();
+
+        // Draw Reddit Snoo head (simplified)
+        const headRadius = radius * 0.4;
+        ctx.fillStyle = "#FF4500";
+        ctx.beginPath();
+        ctx.arc(
+          centerX,
+          centerY - headRadius * 0.2,
+          headRadius,
+          0,
+          2 * Math.PI
+        );
+        ctx.fill();
+
+        // Draw eyes
+        const eyeRadius = headRadius * 0.15;
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(
+          centerX - headRadius * 0.3,
+          centerY - headRadius * 0.3,
+          eyeRadius,
+          0,
+          2 * Math.PI
+        );
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(
+          centerX + headRadius * 0.3,
+          centerY - headRadius * 0.3,
+          eyeRadius,
+          0,
+          2 * Math.PI
+        );
+        ctx.fill();
+
+        // Draw AI sparkles
+        ctx.fillStyle = "#FFD700";
+        const sparkleSize = size * 0.05;
+
+        // Top sparkle
+        drawSparkle(ctx, centerX, centerY - radius * 0.8, sparkleSize);
+        // Right sparkle
+        drawSparkle(
+          ctx,
+          centerX + radius * 0.6,
+          centerY - radius * 0.3,
+          sparkleSize * 0.8
+        );
+        // Left sparkle
+        drawSparkle(
+          ctx,
+          centerX - radius * 0.6,
+          centerY + radius * 0.2,
+          sparkleSize * 0.7
+        );
+
+        // Draw border
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.stroke();
+      }
+
+      function drawSparkle(ctx, x, y, size) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(Math.PI / 4);
+
+        ctx.fillRect(-size / 2, -size / 2, size, size);
+        ctx.rotate(Math.PI / 2);
+        ctx.fillRect(-size / 2, -size / 2, size, size);
+
+        ctx.restore();
+      }
+
+      function downloadIcon(canvasId, filename) {
+        const canvas = document.getElementById(canvasId);
+        const link = document.createElement("a");
+        link.download = filename;
+        link.href = canvas.toDataURL();
+        link.click();
+      }
+
+      // Generate all icons
+      drawIcon(document.getElementById("icon16"), 16);
+      drawIcon(document.getElementById("icon48"), 48);
+      drawIcon(document.getElementById("icon128"), 128);
+    </script>
+  </body>
+</html>
