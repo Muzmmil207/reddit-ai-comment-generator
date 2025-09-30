@@ -163,23 +163,13 @@ async function generateCommentWithGemini(postData, apiKey) {
         body += '\n\n[Content truncated for length]';
     }
     
-    // Construct the prompt
-    const prompt = `You are a helpful Reddit commenter. Generate a concise, thoughtful, polite comment that adds value to this Reddit post. Keep it natural and tailored to the post context.
-
-Post Title: ${title}
-
-Post Body: ${body}
-
-Instructions: 
-- Write a comment between 30-120 words
-- Add value to the discussion
-- Be respectful and constructive
-- Optionally ask a follow-up question
-- Avoid profanity, abuse, or controversial topics
-- Keep the tone conversational and natural
-- Don't mention that you're an AI
-
-Generate only the comment text, no additional formatting or explanations.`;
+    // Get custom system prompt from storage
+    const systemPrompt = await getSystemPrompt();
+    
+    // Replace placeholders in the prompt with actual content
+    const prompt = systemPrompt
+        .replace(/\{title\}/g, title)
+        .replace(/\{body\}/g, body);
 
     const requestBody = {
         contents: [{
@@ -285,6 +275,55 @@ async function getApiKey() {
     } catch (error) {
         console.error('Error retrieving API key:', error);
         return null;
+    }
+}
+
+/**
+ * Get system prompt from storage
+ */
+async function getSystemPrompt() {
+    try {
+        const result = await chrome.storage.local.get(['systemPrompt']);
+        if (result.systemPrompt) {
+            return result.systemPrompt;
+        } else {
+            // Return default prompt if none is stored
+            return `You are a helpful Reddit commenter. Generate a concise, thoughtful, polite comment that adds value to this Reddit post. Keep it natural and tailored to the post context.
+
+Post Title: {title}
+
+Post Body: {body}
+
+Instructions: 
+- Write a comment between 30-120 words
+- Add value to the discussion
+- Be respectful and constructive
+- Optionally ask a follow-up question
+- Avoid profanity, abuse, or controversial topics
+- Keep the tone conversational and natural
+- Don't mention that you're an AI
+
+Generate only the comment text, no additional formatting or explanations.`;
+        }
+    } catch (error) {
+        console.error('Error retrieving system prompt:', error);
+        // Return default prompt on error
+        return `You are a helpful Reddit commenter. Generate a concise, thoughtful, polite comment that adds value to this Reddit post. Keep it natural and tailored to the post context.
+
+Post Title: {title}
+
+Post Body: {body}
+
+Instructions: 
+- Write a comment between 30-120 words
+- Add value to the discussion
+- Be respectful and constructive
+- Optionally ask a follow-up question
+- Avoid profanity, abuse, or controversial topics
+- Keep the tone conversational and natural
+- Don't mention that you're an AI
+
+Generate only the comment text, no additional formatting or explanations.`;
     }
 }
 

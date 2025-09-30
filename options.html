@@ -288,6 +288,79 @@
       <div class="content">
         <div id="statusMessage" class="status-message"></div>
 
+        <!-- System Prompt Configuration -->
+        <div class="section">
+          <h2>💬 System Prompt Configuration</h2>
+
+          <div class="info-box">
+            <h3>Customize the AI's behavior:</h3>
+            <p>
+              The system prompt defines how the AI should behave when generating
+              comments. You can customize the tone, style, and instructions for
+              comment generation.
+            </p>
+            <p><strong>Example customizations:</strong></p>
+            <ul>
+              <li>
+                <strong>Humorous:</strong> "You are a witty Reddit commenter who
+                adds humor while being helpful..."
+              </li>
+              <li>
+                <strong>Technical:</strong> "You are an expert who provides
+                detailed technical analysis..."
+              </li>
+              <li>
+                <strong>Supportive:</strong> "You are a supportive community
+                member who offers encouragement..."
+              </li>
+              <li>
+                <strong>Question-focused:</strong> "You are a curious Reddit
+                user who asks thoughtful follow-up questions..."
+              </li>
+            </ul>
+          </div>
+
+          <div class="form-group">
+            <label for="systemPrompt">System Prompt:</label>
+            <textarea
+              id="systemPrompt"
+              rows="12"
+              placeholder="Enter your custom system prompt..."
+              style="
+                width: 100%;
+                padding: 12px 16px;
+                border: 2px solid #e9ecef;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: 'Segoe UI', sans-serif;
+                resize: vertical;
+                min-height: 200px;
+              "
+            ></textarea>
+            <div class="form-help">
+              This prompt will be used to instruct the AI on how to generate
+              comments.
+              <strong>Available variables:</strong>
+              <ul style="margin: 8px 0 0 20px; font-size: 12px">
+                <li><code>{title}</code> - The Reddit post title</li>
+                <li><code>{body}</code> - The Reddit post body text</li>
+              </ul>
+              These variables will be automatically replaced with the actual
+              content when generating comments.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button id="savePromptBtn" class="btn">💾 Save Prompt</button>
+            <button id="resetPromptBtn" class="btn btn-secondary">
+              🔄 Reset to Default
+            </button>
+            <button id="previewPromptBtn" class="btn btn-secondary">
+              👁️ Preview
+            </button>
+          </div>
+        </div>
+
         <!-- API Key Configuration -->
         <div class="section">
           <h2>🔑 API Key Configuration</h2>

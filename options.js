@@ -16,15 +16,23 @@ const statusMessage = document.getElementById('statusMessage');
 const testResults = document.getElementById('testResults');
 const testOutput = document.getElementById('testOutput');
 
+// System prompt elements
+const systemPromptTextarea = document.getElementById('systemPrompt');
+const savePromptBtn = document.getElementById('savePromptBtn');
+const resetPromptBtn = document.getElementById('resetPromptBtn');
+const previewPromptBtn = document.getElementById('previewPromptBtn');
+
 // State
 let currentApiKey = '';
 let isTesting = false;
+let currentSystemPrompt = '';
 
 /**
  * Initialize the options page
  */
 document.addEventListener('DOMContentLoaded', async () => {
     await loadSettings();
+    await loadSystemPrompt();
     setupEventListeners();
 });
 
@@ -32,9 +40,15 @@ document.addEventListener('DOMContentLoaded', async () => {
  * Set up event listeners
  */
 function setupEventListeners() {
+    // API key event listeners
     saveBtn.addEventListener('click', handleSaveApiKey);
     testBtn.addEventListener('click', handleTestApiKey);
     clearBtn.addEventListener('click', handleClearApiKey);
+    
+    // System prompt event listeners
+    savePromptBtn.addEventListener('click', handleSavePrompt);
+    resetPromptBtn.addEventListener('click', handleResetPrompt);
+    previewPromptBtn.addEventListener('click', handlePreviewPrompt);
     
     // Auto-save on input change (with debounce)
     let saveTimeout;
@@ -43,6 +57,17 @@ function setupEventListeners() {
         saveTimeout = setTimeout(() => {
             if (apiKeyInput.value.trim() && apiKeyInput.value !== currentApiKey) {
                 showStatus('API key has been modified. Click "Save API Key" to save changes.', 'warning');
+            }
+        }, 1000);
+    });
+    
+    // System prompt change detection
+    let promptSaveTimeout;
+    systemPromptTextarea.addEventListener('input', () => {
+        clearTimeout(promptSaveTimeout);
+        promptSaveTimeout = setTimeout(() => {
+            if (systemPromptTextarea.value.trim() !== currentSystemPrompt) {
+                showStatus('System prompt has been modified. Click "Save Prompt" to save changes.', 'warning');
             }
         }, 1000);
     });
@@ -341,4 +366,190 @@ async function getStorageInfo() {
         console.error('Error getting storage info:', error);
         return null;
     }
+}
+
+/**
+ * Get the default system prompt
+ */
+function getDefaultSystemPrompt() {
+    return `You are a helpful Reddit commenter. Generate a concise, thoughtful, polite comment that adds value to this Reddit post. Keep it natural and tailored to the post context.
+
+Post Title: {title}
+
+Post Body: {body}
+
+Instructions: 
+- Write a comment between 30-120 words
+- Add value to the discussion
+- Be respectful and constructive
+- Optionally ask a follow-up question
+- Avoid profanity, abuse, or controversial topics
+- Keep the tone conversational and natural
+- Don't mention that you're an AI
+
+Generate only the comment text, no additional formatting or explanations.`;
+}
+
+/**
+ * Load system prompt from storage
+ */
+async function loadSystemPrompt() {
+    try {
+        const result = await chrome.storage.local.get(['systemPrompt']);
+        if (result.systemPrompt) {
+            currentSystemPrompt = result.systemPrompt;
+            systemPromptTextarea.value = result.systemPrompt;
+        } else {
+            // Set default prompt if none exists
+            const defaultPrompt = getDefaultSystemPrompt();
+            currentSystemPrompt = defaultPrompt;
+            systemPromptTextarea.value = defaultPrompt;
+            // Save the default prompt
+            await chrome.storage.local.set({ systemPrompt: defaultPrompt });
+        }
+    } catch (error) {
+        console.error('Error loading system prompt:', error);
+        showStatus('Error loading system prompt from storage.', 'error');
+    }
+}
+
+/**
+ * Handle save system prompt button click
+ */
+async function handleSavePrompt() {
+    const prompt = systemPromptTextarea.value.trim();
+    
+    if (!prompt) {
+        showStatus('Please enter a system prompt.', 'error');
+        systemPromptTextarea.focus();
+        return;
+    }
+    
+    try {
+        await chrome.storage.local.set({ systemPrompt: prompt });
+        currentSystemPrompt = prompt;
+        showStatus('System prompt saved successfully!', 'success');
+        
+        // Visual feedback
+        savePromptBtn.style.opacity = '0.5';
+        savePromptBtn.textContent = '✅ Saved!';
+        setTimeout(() => {
+            savePromptBtn.style.opacity = '1';
+            savePromptBtn.textContent = '💾 Save Prompt';
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Error saving system prompt:', error);
+        showStatus('Error saving system prompt to storage.', 'error');
+    }
+}
+
+/**
+ * Handle reset system prompt button click
+ */
+async function handleResetPrompt() {
+    if (!confirm('Are you sure you want to reset the system prompt to the default? This will overwrite your current custom prompt.')) {
+        return;
+    }
+    
+    try {
+        const defaultPrompt = getDefaultSystemPrompt();
+        await chrome.storage.local.set({ systemPrompt: defaultPrompt });
+        currentSystemPrompt = defaultPrompt;
+        systemPromptTextarea.value = defaultPrompt;
+        showStatus('System prompt reset to default successfully!', 'success');
+        
+        // Visual feedback
+        resetPromptBtn.style.opacity = '0.5';
+        resetPromptBtn.textContent = '✅ Reset!';
+        setTimeout(() => {
+            resetPromptBtn.style.opacity = '1';
+            resetPromptBtn.textContent = '🔄 Reset to Default';
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Error resetting system prompt:', error);
+        showStatus('Error resetting system prompt.', 'error');
+    }
+}
+
+/**
+ * Handle preview system prompt button click
+ */
+async function handlePreviewPrompt() {
+    const prompt = systemPromptTextarea.value.trim();
+    
+    if (!prompt) {
+        showStatus('Please enter a system prompt to preview.', 'error');
+        systemPromptTextarea.focus();
+        return;
+    }
+    
+    // Create a preview with sample data
+    const sampleTitle = "Sample Reddit Post Title";
+    const sampleBody = "This is a sample Reddit post body that demonstrates how your prompt will look with actual content. It shows how the {title} and {body} variables will be replaced.";
+    
+    const previewPrompt = prompt
+        .replace(/\{title\}/g, sampleTitle)
+        .replace(/\{body\}/g, sampleBody);
+    
+    // Show preview in a modal or alert
+    const previewWindow = window.open('', '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
+    previewWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>System Prompt Preview</title>
+            <style>
+                body { 
+                    font-family: 'Segoe UI', sans-serif; 
+                    padding: 20px; 
+                    line-height: 1.6;
+                    background: #f5f5f5;
+                }
+                .container { 
+                    background: white; 
+                    padding: 30px; 
+                    border-radius: 8px; 
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                    max-width: 800px;
+                    margin: 0 auto;
+                }
+                h1 { color: #333; margin-bottom: 20px; }
+                .prompt { 
+                    background: #f8f9fa; 
+                    padding: 20px; 
+                    border-radius: 6px; 
+                    border-left: 4px solid #667eea;
+                    white-space: pre-wrap;
+                    font-family: 'Courier New', monospace;
+                    font-size: 14px;
+                }
+                .sample-data {
+                    background: #e3f2fd;
+                    padding: 15px;
+                    border-radius: 6px;
+                    margin: 15px 0;
+                    border-left: 4px solid #2196f3;
+                }
+                .sample-data strong { color: #1976d2; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🔍 System Prompt Preview</h1>
+                <p>This shows how your prompt will look with sample Reddit post data:</p>
+                
+                <div class="sample-data">
+                    <strong>Sample Title:</strong> ${sampleTitle}<br>
+                    <strong>Sample Body:</strong> ${sampleBody}
+                </div>
+                
+                <h2>Your Prompt with Sample Data:</h2>
+                <div class="prompt">${previewPrompt}</div>
+            </div>
+        </body>
+        </html>
+    `);
+    previewWindow.document.close();
 }
